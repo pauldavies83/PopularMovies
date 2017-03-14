@@ -15,8 +15,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        movie = getIntent().getParcelableExtra(MainActivity.MOVIE_PARCEL_KEY);
-        bindDataToView();
+        if (getIntent() != null && getIntent().hasExtra(MainActivity.MOVIE_PARCEL_KEY)) {
+            movie = getIntent().getParcelableExtra(MainActivity.MOVIE_PARCEL_KEY);
+            bindDataToView();
+        } else {
+            setTitle("Movie not found");
+        }
     }
 
     private void bindDataToView() {
