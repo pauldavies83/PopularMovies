@@ -22,19 +22,23 @@
             android:id="@+id/tv_movie_synopsis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="Synopsis goes here"
             />
 
         <TextView
             android:id="@+id/tv_movie_user_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="10.0 / 10.0"
             />
 
         <TextView
             android:id="@+id/tv_movie_release_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="1970-01-01"
             />
+
     </LinearLayout>
 
 </ScrollView>
