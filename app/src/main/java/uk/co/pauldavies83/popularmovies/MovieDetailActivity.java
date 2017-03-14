@@ -19,7 +19,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             movie = getIntent().getParcelableExtra(MainActivity.MOVIE_PARCEL_KEY);
             bindDataToView();
         } else {
-            setTitle("Movie not found");
+            setTitle(getString(R.string.movie_not_found));
         }
     }
 
