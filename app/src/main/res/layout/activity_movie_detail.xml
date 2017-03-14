@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/movie_image"
         android:layout_height="wrap_content"
-        android:layout_width="185dp"
+        android:layout_width="@dimen/image_poster_width"
         android:adjustViewBounds="true"
         />
 
