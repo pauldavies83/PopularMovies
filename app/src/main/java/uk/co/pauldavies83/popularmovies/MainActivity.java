@@ -11,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         apiKey = getResources().getString(R.string.tmdb_v3_api_key);
         okHttpClient = new OkHttpClient();
 

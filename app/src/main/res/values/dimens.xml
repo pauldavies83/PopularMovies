@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="image_poster_width">185dp</dimen>
+    <dimen name="collapsing_toolbar_height">200dp</dimen>
 </resources>

@@ -5,5 +5,8 @@
     <string name="top_rated">Top Rated</string>
 
     <string name="movie_not_found">Movie not found</string>
+    <string name="movie_detail">MovieDetail</string>
+
+    <string name="rating_template" translatable="false">%s / 10</string>
 
 </resources>

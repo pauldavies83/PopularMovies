@@ -1,6 +1,8 @@
 package uk.co.pauldavies83.popularmovies;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
