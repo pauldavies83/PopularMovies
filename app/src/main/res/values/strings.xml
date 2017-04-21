@@ -8,5 +8,7 @@
     <string name="movie_detail">MovieDetail</string>
 
     <string name="rating_template" translatable="false">%s / 10</string>
+    <string name="reviews_title">Reviews:</string>
+    <string name="trailers_title">Trailers:</string>
 
 </resources>

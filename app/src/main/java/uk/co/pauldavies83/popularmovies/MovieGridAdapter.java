@@ -1,8 +1,6 @@
 package uk.co.pauldavies83.popularmovies;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -12,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+
+import uk.co.pauldavies83.popularmovies.model.Movie;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MoviePosterViewHolder> {
 
