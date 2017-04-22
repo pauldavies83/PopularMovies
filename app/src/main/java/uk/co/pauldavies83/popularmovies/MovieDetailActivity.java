@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -68,7 +67,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         movie = getIntent().getParcelableExtra(MainActivity.MOVIE_PARCEL_KEY);
         apiKey = getResources().getString(R.string.tmdb_v3_api_key);
-        okHttpClient = new OkHttpClient();
+        okHttpClient = ((PopularMoviesApplication) getApplication()).getOkHttpClient();
 
         createListViews();
         bindDataToView();

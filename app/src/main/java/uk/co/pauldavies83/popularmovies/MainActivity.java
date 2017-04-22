@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         apiKey = getResources().getString(R.string.tmdb_v3_api_key);
-        okHttpClient = new OkHttpClient();
+        okHttpClient = ((PopularMoviesApplication) getApplication()).getOkHttpClient();
 
         progressBar = findViewById(R.id.progress_bar);
         createMovieGridView();
