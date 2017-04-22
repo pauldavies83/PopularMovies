@@ -1,6 +1,8 @@
 package uk.co.pauldavies83.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +33,17 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     }
 
     @Override
-    public void onBindViewHolder(VideoListItemViewHolder holder, int position) {
+    public void onBindViewHolder(VideoListItemViewHolder holder, final int position) {
         holder.videoTitle.setText(videos[position].getName());
+        holder.videoListItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(
+                        new Intent(Intent.ACTION_VIEW,
+                                   Uri.parse("http://www.youtube.com/watch?v=" + videos[position].getKey())
+                        ));
+            }
+        });
     }
 
     @Override
@@ -44,9 +55,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.Vide
     class VideoListItemViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView videoTitle;
+        private final View videoListItem;
 
         VideoListItemViewHolder(View reviewListItem) {
             super(reviewListItem);
+            videoListItem = reviewListItem.findViewById(R.id.video_list_item);
             videoTitle = (TextView) reviewListItem.findViewById(R.id.tv_title);
         }
     }
