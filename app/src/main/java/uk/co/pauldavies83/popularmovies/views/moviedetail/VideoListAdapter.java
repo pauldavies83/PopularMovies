@@ -1,4 +1,4 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.views.moviedetail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.pauldavies83.popularmovies.R;
 import uk.co.pauldavies83.popularmovies.model.Video;
 
 public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.VideoListItemViewHolder> {

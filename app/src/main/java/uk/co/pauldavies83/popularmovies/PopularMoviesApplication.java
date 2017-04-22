@@ -8,7 +8,7 @@ public class PopularMoviesApplication extends Application {
 
     protected OkHttpClient okHttpClient;
 
-    protected OkHttpClient getOkHttpClient() {
+    public OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
             okHttpClient = new OkHttpClient();
         }

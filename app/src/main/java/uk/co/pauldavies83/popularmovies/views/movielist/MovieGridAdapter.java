@@ -1,4 +1,4 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import uk.co.pauldavies83.popularmovies.R;
 import uk.co.pauldavies83.popularmovies.model.Movie;
 
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.MoviePosterViewHolder> {

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context="uk.co.pauldavies83.popularmovies.MovieDetailActivity"
+    tools:context="uk.co.pauldavies83.popularmovies.views.moviedetail.MovieDetailActivity"
     tools:showIn="@layout/activity_movie_detail">
 
     <ImageView

@@ -1,4 +1,4 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.views.moviedetail;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -30,12 +30,13 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import uk.co.pauldavies83.popularmovies.PopularMoviesApplication;
+import uk.co.pauldavies83.popularmovies.R;
 import uk.co.pauldavies83.popularmovies.model.Movie;
 import uk.co.pauldavies83.popularmovies.model.Review;
 import uk.co.pauldavies83.popularmovies.model.Video;
-
-import static uk.co.pauldavies83.popularmovies.MainActivity.MOVIE_PARCEL_KEY;
-import static uk.co.pauldavies83.popularmovies.MainActivity.THEMOVIEDB_BASE_URL;
+import uk.co.pauldavies83.popularmovies.views.movielist.MainActivity;
+import uk.co.pauldavies83.popularmovies.views.movielist.MovieGridAdapter;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -83,7 +84,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putParcelable(MOVIE_PARCEL_KEY, movie);
+        outState.putParcelable(MainActivity.MOVIE_PARCEL_KEY, movie);
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
@@ -147,7 +148,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (isOnline() && params != null && params.length > 0) {
                 movieId = params[0];
 
-                Uri uri = Uri.parse(THEMOVIEDB_BASE_URL)
+                Uri uri = Uri.parse(MainActivity.THEMOVIEDB_BASE_URL)
                         .buildUpon()
                         .appendPath(movieId)
                         .appendPath("videos")
@@ -198,7 +199,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (isOnline() && params != null && params.length > 0) {
                 movieId = params[0];
 
-                Uri uri = Uri.parse(THEMOVIEDB_BASE_URL)
+                Uri uri = Uri.parse(MainActivity.THEMOVIEDB_BASE_URL)
                         .buildUpon()
                         .appendPath(movieId)
                         .appendPath("reviews") // "videos" for videos

@@ -12,14 +12,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".views.movielist.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MovieDetailActivity" android:parentActivityName=".MainActivity">
+        <activity android:name=".views.moviedetail.MovieDetailActivity" android:parentActivityName=".views.movielist.MainActivity">
         </activity>
     </application>
 

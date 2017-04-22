@@ -1,4 +1,4 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,10 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import uk.co.pauldavies83.popularmovies.PopularMoviesApplication;
+import uk.co.pauldavies83.popularmovies.R;
 import uk.co.pauldavies83.popularmovies.model.Movie;
+import uk.co.pauldavies83.popularmovies.views.moviedetail.MovieDetailActivity;
 
 public class MainActivity extends AppCompatActivity implements MovieGridAdapter.MovieClickListener {
 
