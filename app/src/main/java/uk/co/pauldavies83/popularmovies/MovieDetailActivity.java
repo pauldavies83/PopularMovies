@@ -110,6 +110,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void bindDataToView() {
         ImageView image = (ImageView) findViewById(R.id.movie_image);
+        image.setContentDescription(movie.getTitle());
         Picasso.with(getApplicationContext()).
                 load(MovieGridAdapter.TMBD_BASE_IMAGE_URL + "w185" + movie.getPosterPath()).
                 placeholder(R.mipmap.ic_launcher).
@@ -233,7 +234,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         protected void onPostExecute(Review[] reviews) {
             if (reviews != null) {
                 reviewListAdapter.setReviews(reviews);
-                findViewById(R.id.review_list).setVisibility(View.VISIBLE);
+                findViewById(R.id.tv_reviews_title).setVisibility(View.VISIBLE);
                 findViewById(R.id.divider2).setVisibility(View.VISIBLE);
                 reviewListView.setVisibility(View.VISIBLE);
             }
