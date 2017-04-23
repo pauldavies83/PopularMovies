@@ -3,6 +3,7 @@
 
     <string name="most_popular">Most Popular</string>
     <string name="top_rated">Top Rated</string>
+    <string name="favourites">Favourites</string>
 
     <string name="movie_not_found">Movie not found</string>
     <string name="movie_detail">MovieDetail</string>

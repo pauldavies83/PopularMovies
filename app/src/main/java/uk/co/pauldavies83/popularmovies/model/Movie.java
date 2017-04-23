@@ -45,6 +45,15 @@ public class Movie implements Parcelable {
         poster_path = jsonObject.getString("poster_path");
     }
 
+    public Movie(String id, String title, String overview, String vote_average, String release_date, String poster_path) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.vote_average = vote_average;
+        this.release_date = release_date;
+        this.poster_path = poster_path;
+    }
+
     public String getId() {
         return id;
     }

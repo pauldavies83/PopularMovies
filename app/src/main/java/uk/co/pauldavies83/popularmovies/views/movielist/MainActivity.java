@@ -2,6 +2,7 @@ package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -24,12 +25,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import uk.co.pauldavies83.popularmovies.PopularMoviesApplication;
 import uk.co.pauldavies83.popularmovies.R;
+import uk.co.pauldavies83.popularmovies.data.FavouritesColumns;
+import uk.co.pauldavies83.popularmovies.data.MovieProvider;
 import uk.co.pauldavies83.popularmovies.model.Movie;
 import uk.co.pauldavies83.popularmovies.views.moviedetail.MovieDetailActivity;
 
@@ -110,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
                     case 1:
                         fetchMovieData(TOP_RATED);
                         break;
+                    case 2:
+                        fetchFavouriteMovieData();
+                        break;
                 }
             }
 
@@ -120,6 +128,29 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         return true;
     }
 
+    private void fetchFavouriteMovieData() {
+        Cursor cursor = getContentResolver().query(
+                MovieProvider.Favourites.FAVOURITES,
+                null,
+                null,
+                null,
+                null);
+        List<Movie> movies = new ArrayList<>();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do {
+                Movie movie = new Movie(cursor.getString(cursor.getColumnIndex(FavouritesColumns._ID)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.TITLE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.VOTE_AVERAGE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.RELEASE_DATE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.POSTER_PATH)));
+                movies.add(movie);
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        movieGridAdapter.setMovies(movies.toArray(new Movie[movies.size()]));
+    }
 
     class FetchMovieDataTask extends AsyncTask<String, Object, Movie[]> {
         @Override
@@ -179,8 +210,6 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
             }
         }
     }
-
-
 
 }
 

@@ -20,7 +20,6 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
         void onMovieClicked(Movie movie);
     }
 
-
     public static final String TMBD_BASE_IMAGE_URL = "http://image.tmdb.org/t/p/";
 
     private Context context;

@@ -32,6 +32,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import uk.co.pauldavies83.popularmovies.PopularMoviesApplication;
 import uk.co.pauldavies83.popularmovies.R;
+import uk.co.pauldavies83.popularmovies.data.MovieProvider;
 import uk.co.pauldavies83.popularmovies.model.Movie;
 import uk.co.pauldavies83.popularmovies.model.Review;
 import uk.co.pauldavies83.popularmovies.model.Video;
@@ -91,6 +92,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_favourite, menu);
+        menu.findItem(R.id.btn_favourite).
+                setIcon(MovieProvider.isMovieFavourite(getContentResolver(), movie.getId()) ? R.drawable.ic_favourite_added : R.drawable.ic_favourite_not_added);
         return true;
     }
 
@@ -98,10 +101,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btn_favourite:
-                boolean isChecked = !item.isChecked();
-                item.setChecked(isChecked);
-                item.setIcon(isChecked ? R.drawable.ic_favourite_added : R.drawable.ic_favourite_not_added);
-
+                if (MovieProvider.isMovieFavourite(getContentResolver(), movie.getId())) {
+                    MovieProvider.removeMovieFromFavourites(getContentResolver(), movie.getId());
+                    item.setChecked(false);
+                } else {
+                    MovieProvider.addMovieToFavourites(getContentResolver(), movie);
+                    item.setChecked(true);
+                }
+                item.setIcon(item.isChecked() ? R.drawable.ic_favourite_added : R.drawable.ic_favourite_not_added);
                 return true;
             default:
                 return false;

@@ -21,6 +21,12 @@
         </activity>
         <activity android:name=".views.moviedetail.MovieDetailActivity" android:parentActivityName=".views.movielist.MainActivity">
         </activity>
+
+        <provider
+            android:authorities="uk.co.pauldavies83.popularmovies.MovieProvider"
+            android:name=".data.generated.MovieProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
