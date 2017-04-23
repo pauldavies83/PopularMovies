@@ -1,7 +1,9 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -10,23 +12,34 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import uk.co.pauldavies83.popularmovies.PopularMoviesApplication;
+import uk.co.pauldavies83.popularmovies.R;
+import uk.co.pauldavies83.popularmovies.data.FavouritesColumns;
+import uk.co.pauldavies83.popularmovies.data.MovieProvider;
+import uk.co.pauldavies83.popularmovies.model.Movie;
+import uk.co.pauldavies83.popularmovies.views.moviedetail.MovieDetailActivity;
 
 public class MainActivity extends AppCompatActivity implements MovieGridAdapter.MovieClickListener {
 
@@ -36,11 +49,17 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
     public static final String MOVIE_PARCEL_KEY = "movie_parcel";
 
+    private static final String GRID_SELECTED_FILTER = "grid_selected_filter";
+    private static final int MOST_POPULAR_FILTER = 0;
+    private static final int TOP_RATED_FILTER = 1;
+    private static final int FAVOURITES_FILTER = 2;
+
     private String apiKey;
     private OkHttpClient okHttpClient;
 
     private RecyclerView movieGrid;
     private View progressBar;
+    private TextView errorText;
 
     private MovieGridAdapter movieGridAdapter;
 
@@ -48,22 +67,32 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
         apiKey = getResources().getString(R.string.tmdb_v3_api_key);
-        okHttpClient = new OkHttpClient();
+        okHttpClient = ((PopularMoviesApplication) getApplication()).getOkHttpClient();
 
         progressBar = findViewById(R.id.progress_bar);
+        errorText = (TextView) findViewById(R.id.tv_error_text);
         createMovieGridView();
-        fetchMovieData(MOST_POPULAR);
+        switchViewFilter(getCurrentSelectedFilterFromPrefs());
     }
 
     private void fetchMovieData(String sortOrder) {
+        errorText.setVisibility(View.GONE);
         new FetchMovieDataTask().execute(sortOrder);
     }
 
     private void createMovieGridView() {
-        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager layoutManager;
+        if (isLandscape()) {
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        } else {
+            layoutManager = new GridLayoutManager(this, 2);
+        }
         movieGrid = (RecyclerView) findViewById(R.id.rv_movie_grid);
-        movieGrid.setLayoutManager(gridLayout);
+        movieGrid.setLayoutManager(layoutManager);
         movieGridAdapter = new MovieGridAdapter(this, this);
         movieGrid.setAdapter(movieGridAdapter);
     }
@@ -72,6 +101,10 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override
@@ -95,23 +128,58 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int item, long l) {
-                switch (item) {
-                    case 0:
-                        fetchMovieData(MOST_POPULAR);
-                        break;
-                    case 1:
-                        fetchMovieData(TOP_RATED);
-                        break;
-                }
+                switchViewFilter(item);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-
+        spinner.setSelection(getCurrentSelectedFilterFromPrefs(), false);
         return true;
     }
 
+    private int getCurrentSelectedFilterFromPrefs() {
+        return getPreferences(MODE_PRIVATE).getInt(GRID_SELECTED_FILTER, MOST_POPULAR_FILTER);
+    }
+
+    private void switchViewFilter(int item) {
+        getPreferences(MODE_PRIVATE).edit().putInt(GRID_SELECTED_FILTER, item).apply();
+        switch (item) {
+            case MOST_POPULAR_FILTER:
+                fetchMovieData(MOST_POPULAR);
+                break;
+            case TOP_RATED_FILTER:
+                fetchMovieData(TOP_RATED);
+                break;
+            case FAVOURITES_FILTER:
+                fetchFavouriteMovieData();
+                break;
+        }
+    }
+
+    private void fetchFavouriteMovieData() {
+        Cursor cursor = getContentResolver().query(MovieProvider.Favourites.FAVOURITES, null, null, null, null);
+        List<Movie> movies = new ArrayList<>();
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                Movie movie = new Movie(cursor.getString(cursor.getColumnIndex(FavouritesColumns._ID)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.TITLE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.VOTE_AVERAGE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.RELEASE_DATE)),
+                        cursor.getString(cursor.getColumnIndex(FavouritesColumns.POSTER_PATH)));
+                movies.add(movie);
+            } while (cursor.moveToNext());
+            cursor.close();
+            movieGridAdapter.setMovies(movies.toArray(new Movie[movies.size()]));
+            movieGrid.setVisibility(View.VISIBLE);
+        } else {
+            movieGrid.setVisibility(View.GONE);
+            errorText.setText(getString(R.string.no_favourites));
+            errorText.setVisibility(View.VISIBLE);
+        }
+    }
 
     class FetchMovieDataTask extends AsyncTask<String, Object, Movie[]> {
         @Override
@@ -156,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
                     e.printStackTrace();
                 }
             } else {
-                movies = new Movie[0];
+                movies = null;
             }
 
             return movies;
@@ -164,15 +232,16 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
         @Override
         protected void onPostExecute(Movie[] movies) {
+            progressBar.setVisibility(View.GONE);
             if (movies != null) {
                 movieGridAdapter.setMovies(movies);
                 movieGrid.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
+            } else {
+                errorText.setText(getString(R.string.connection_error));
+                errorText.setVisibility(View.VISIBLE);
             }
         }
     }
-
-
 
 }
 

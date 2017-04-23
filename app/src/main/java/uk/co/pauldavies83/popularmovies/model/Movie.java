@@ -1,4 +1,4 @@
-package uk.co.pauldavies83.popularmovies;
+package uk.co.pauldavies83.popularmovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 public class Movie implements Parcelable {
 
+    private final String id;
     private final String title;
     private final String overview;
     private final String vote_average;
@@ -27,6 +28,7 @@ public class Movie implements Parcelable {
     };
 
     private Movie(Parcel parcel) {
+        id = parcel.readString();
         title = parcel.readString();
         overview = parcel.readString();
         vote_average = parcel.readString();
@@ -35,11 +37,25 @@ public class Movie implements Parcelable {
     }
 
     public Movie(JSONObject jsonObject) throws JSONException {
+        id = jsonObject.getString("id");
         title = jsonObject.getString("title");
         overview =jsonObject.getString("overview");
         vote_average = jsonObject.getString("vote_average");
         release_date = jsonObject.getString("release_date");
         poster_path = jsonObject.getString("poster_path");
+    }
+
+    public Movie(String id, String title, String overview, String vote_average, String release_date, String poster_path) {
+        this.id = id;
+        this.title = title;
+        this.overview = overview;
+        this.vote_average = vote_average;
+        this.release_date = release_date;
+        this.poster_path = poster_path;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -69,6 +85,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeString(overview);
         parcel.writeString(vote_average);
