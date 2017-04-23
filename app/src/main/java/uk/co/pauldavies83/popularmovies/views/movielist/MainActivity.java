@@ -2,6 +2,7 @@ package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -78,9 +80,14 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
     }
 
     private void createMovieGridView() {
-        RecyclerView.LayoutManager gridLayout = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager layoutManager;
+        if (isLandscape()) {
+            layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        } else {
+            layoutManager = new GridLayoutManager(this, 2);
+        }
         movieGrid = (RecyclerView) findViewById(R.id.rv_movie_grid);
-        movieGrid.setLayoutManager(gridLayout);
+        movieGrid.setLayoutManager(layoutManager);
         movieGridAdapter = new MovieGridAdapter(this, this);
         movieGrid.setAdapter(movieGridAdapter);
     }
@@ -89,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @Override

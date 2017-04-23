@@ -1,13 +1,13 @@
 package uk.co.pauldavies83.popularmovies.views.movielist;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +48,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
 
         Picasso.with(context).
                 load(TMBD_BASE_IMAGE_URL + "w185" + movies[position].getPosterPath()).
-                placeholder(R.mipmap.ic_launcher).
+                placeholder(R.drawable.ic_movie_placeholder).
                 resize(metrics.widthPixels, (int)(metrics.widthPixels * 1.5)).
                 into(holder.movieImage);
     }
@@ -66,11 +66,11 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.Movi
 
     class MoviePosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final ImageView movieImage;
+        public final AppCompatImageView movieImage;
 
         public MoviePosterViewHolder(View itemView) {
             super(itemView);
-            movieImage = (ImageView) itemView.findViewById(R.id.movie_image);
+            movieImage = (AppCompatImageView) itemView.findViewById(R.id.movie_image);
             itemView.setOnClickListener(this);
         }
 
