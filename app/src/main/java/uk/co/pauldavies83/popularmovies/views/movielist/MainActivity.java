@@ -49,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
     public static final String MOVIE_PARCEL_KEY = "movie_parcel";
 
+    private static final String GRID_SELECTED_FILTER = "grid_selected_filter";
+    private static final int MOST_POPULAR_FILTER = 0;
+    private static final int TOP_RATED_FILTER = 1;
+    private static final int FAVOURITES_FILTER = 2;
+
     private String apiKey;
     private OkHttpClient okHttpClient;
 
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         progressBar = findViewById(R.id.progress_bar);
         errorText = (TextView) findViewById(R.id.tv_error_text);
         createMovieGridView();
-        fetchMovieData(MOST_POPULAR);
+        switchViewFilter(getCurrentSelectedFilterFromPrefs());
     }
 
     private void fetchMovieData(String sortOrder) {
@@ -123,24 +128,33 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int item, long l) {
-                switch (item) {
-                    case 0:
-                        fetchMovieData(MOST_POPULAR);
-                        break;
-                    case 1:
-                        fetchMovieData(TOP_RATED);
-                        break;
-                    case 2:
-                        fetchFavouriteMovieData();
-                        break;
-                }
+                switchViewFilter(item);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-
+        spinner.setSelection(getCurrentSelectedFilterFromPrefs(), false);
         return true;
+    }
+
+    private int getCurrentSelectedFilterFromPrefs() {
+        return getPreferences(MODE_PRIVATE).getInt(GRID_SELECTED_FILTER, MOST_POPULAR_FILTER);
+    }
+
+    private void switchViewFilter(int item) {
+        getPreferences(MODE_PRIVATE).edit().putInt(GRID_SELECTED_FILTER, item).apply();
+        switch (item) {
+            case MOST_POPULAR_FILTER:
+                fetchMovieData(MOST_POPULAR);
+                break;
+            case TOP_RATED_FILTER:
+                fetchMovieData(TOP_RATED);
+                break;
+            case FAVOURITES_FILTER:
+                fetchFavouriteMovieData();
+                break;
+        }
     }
 
     private void fetchFavouriteMovieData() {
