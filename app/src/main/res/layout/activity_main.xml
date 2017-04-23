@@ -18,11 +18,27 @@
         android:id="@+id/rv_movie_grid"
         android:visibility="gone"/>
 
-    <ProgressBar
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/progress_bar"
-        android:layout_gravity="center"
-        android:visibility="visible"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/progress_bar"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/tv_error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:visibility="visible"
+            tools:text="No favourites selected"
+            />
+
+    </FrameLayout>
 
 </LinearLayout>

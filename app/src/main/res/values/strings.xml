@@ -11,5 +11,7 @@
     <string name="rating_template" translatable="false">%s / 10</string>
     <string name="reviews_title">Reviews:</string>
     <string name="trailers_title">Trailers:</string>
+    <string name="no_favourites">No favourites have been selected</string>
+    <string name="connection_error">Unable to connect to the internet to retrieve movie data</string>
 
 </resources>

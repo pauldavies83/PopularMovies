@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
     private RecyclerView movieGrid;
     private View progressBar;
+    private TextView errorText;
 
     private MovieGridAdapter movieGridAdapter;
 
@@ -65,11 +67,13 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
         okHttpClient = ((PopularMoviesApplication) getApplication()).getOkHttpClient();
 
         progressBar = findViewById(R.id.progress_bar);
+        errorText = (TextView) findViewById(R.id.tv_error_text);
         createMovieGridView();
         fetchMovieData(MOST_POPULAR);
     }
 
     private void fetchMovieData(String sortOrder) {
+        errorText.setVisibility(View.GONE);
         new FetchMovieDataTask().execute(sortOrder);
     }
 
@@ -129,14 +133,9 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
     }
 
     private void fetchFavouriteMovieData() {
-        Cursor cursor = getContentResolver().query(
-                MovieProvider.Favourites.FAVOURITES,
-                null,
-                null,
-                null,
-                null);
+        Cursor cursor = getContentResolver().query(MovieProvider.Favourites.FAVOURITES, null, null, null, null);
         List<Movie> movies = new ArrayList<>();
-        if (cursor != null) {
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {
                 Movie movie = new Movie(cursor.getString(cursor.getColumnIndex(FavouritesColumns._ID)),
@@ -148,8 +147,13 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
                 movies.add(movie);
             } while (cursor.moveToNext());
             cursor.close();
+            movieGridAdapter.setMovies(movies.toArray(new Movie[movies.size()]));
+            movieGrid.setVisibility(View.VISIBLE);
+        } else {
+            movieGrid.setVisibility(View.GONE);
+            errorText.setText(getString(R.string.no_favourites));
+            errorText.setVisibility(View.VISIBLE);
         }
-        movieGridAdapter.setMovies(movies.toArray(new Movie[movies.size()]));
     }
 
     class FetchMovieDataTask extends AsyncTask<String, Object, Movie[]> {
@@ -195,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
                     e.printStackTrace();
                 }
             } else {
-                movies = new Movie[0];
+                movies = null;
             }
 
             return movies;
@@ -203,10 +207,13 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
         @Override
         protected void onPostExecute(Movie[] movies) {
+            progressBar.setVisibility(View.GONE);
             if (movies != null) {
                 movieGridAdapter.setMovies(movies);
                 movieGrid.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
+            } else {
+                errorText.setText(getString(R.string.connection_error));
+                errorText.setVisibility(View.VISIBLE);
             }
         }
     }
