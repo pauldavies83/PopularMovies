@@ -16,7 +16,7 @@ public class PopularMoviesDebugApplication extends PopularMoviesApplication {
     @Override
     public OkHttpClient getOkHttpClient() {
         if (okHttpClient == null) {
-            super.getOkHttpClient().newBuilder()
+            okHttpClient = super.getOkHttpClient().newBuilder()
                      .addNetworkInterceptor(new StethoInterceptor())
                      .build();
         }
